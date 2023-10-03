@@ -10,12 +10,12 @@ LibCPU is a library to interact with platform-independent and platform-dependant
 
 ## Architectures
 Currently I try to support the architectures listed below. Currently I'm only working on the x86_64 Support, but x86, ARM and AArch64 are following. In the following table you can see the status of every supported architecture
-| Architecture | Status | CPU Feature Indication |
-|-|-|-|
-| x86_64       | 🚧 In progress | ✅ Implemented |
-| x86          | 📌 Planned     | Not implemented |
-| ARM          | 📌 Planned     | Not implemented |
-| ARM64/AArch64 | 📌 Planned     | Not implemented |
+| Architecture | Status | CPU Feature Indication | Control Register |
+|-|-|-|-|
+| x86_64       | 🚧 In progress | ✅ Implemented | ✅ Implemented |
+| x86          | 📌 Planned     | Not implemented | Not implemented |
+| ARM          | 📌 Planned     | Not implemented | Not implemented |
+| ARM64/AArch64 | 📌 Planned     | Not implemented | Not implemented |
 
 ## Related projects
 I found some projects that are related to this. A few of them are written in a different language, but you can check out them too. Here is a list with them.
