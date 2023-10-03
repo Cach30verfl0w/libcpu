@@ -2,6 +2,13 @@
 
 extern crate alloc;
 
+// Register
+#[cfg(target_pointer_width = "32")]
+type Register = u32;
+
+#[cfg(target_pointer_width = "64")]
+type Register = u64;
+
 // x86 and x86_64 API
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 mod x86;

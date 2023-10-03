@@ -1,7 +1,69 @@
-use crate::cpu_features;
+use bitflags::bitflags;
+use crate::{cpu_register, cpu_features};
 use crate::x86::cpuid::CPUIDRequest;
+use crate::Register;
 
+mod macros;
 mod cpuid;
+
+bitflags! {
+    #[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
+    pub struct CR0Flags: Register {
+        const PROTECTED_MODE_ENABLE = 1 << 0;
+        const MONITOR_CO_PROCESSOR  = 1 << 1;
+        const X86_FPU_EMULATION     = 1 << 2;
+        const TASK_SWITCHED         = 1 << 3;
+        const EXTENSION_TYPE        = 1 << 4;
+        const NUMERIC_ERROR         = 1 << 5;
+        const WRITE_PROTECTED       = 1 << 16;
+        const ALIGNMENT_CHECK       = 1 << 18;
+        const NOT_WRITE_THROUGH     = 1 << 29;
+        const CACHE_DISABLE         = 1 << 30;
+        const PAGING                = 1 << 31;
+    }
+}
+
+cpu_register!(CR0, "cr0", CR0Flags);
+
+bitflags! {
+    #[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
+    pub struct CR3Flags: Register {
+        const PAGE_LEVEL_WRITE_THROUGH = 1 << 3;
+        const PAGE_LEVEL_CACHE_DISABLE = 1 << 4;
+    }
+}
+
+cpu_register!(CR3, "cr3", CR3Flags);
+
+bitflags! {
+    #[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
+    pub struct CR4Flags: Register {
+        const VME                        = 1 << 0;
+        const PVI                        = 1 << 1;
+        const TIMESTAMP_DISABLE          = 1 << 2;
+        const DEBUGGING_EXTENSIONS       = 1 << 3;
+        const PAGE_SIZE_EXTENSION        = 1 << 4;
+        const PHYSCIAL_ADDRESS_EXTENSION = 1 << 5;
+        const MACHINE_CHECK_EXCEPTION    = 1 << 6;
+        const PAGE_GLOBAL_ENABLED        = 1 << 7;
+        const PCE                        = 1 << 8;
+        const OSSupportForFXSR           = 1 << 9;
+        const OSSupportXMMExcept         = 1 << 10;
+        const UMIP                       = 1 << 11;
+        const VIRTUAL_MACHINE_EXT_ENABLE = 1 << 13;
+        const SAFER_MODE_EXT_ENABLE      = 1 << 14;
+        const FSGSBASE                   = 1 << 16;
+        const PCID_ENABLE                = 1 << 17;
+        const OSXSAVE_ENABLE             = 1 << 18;
+        const SMEP                       = 1 << 20;
+        const SMAP                       = 1 << 21;
+        const ProtectionKeyEnable        = 1 << 22;
+        const ControlFlowEnforcement     = 1 << 23;
+        const PKS                        = 1 << 34;
+    }
+}
+
+cpu_register!(CR4, "cr4", CR4Flags);
 
 cpu_features! {
     #[allow(non_camel_case_types)]
