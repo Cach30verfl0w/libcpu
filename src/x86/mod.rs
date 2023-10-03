@@ -256,7 +256,7 @@ cpu_features! {
         F3DNow            (edx, "3DNow!", CPUIDRequest::ExtendedFeatures4) = 1 << 31,
         LAHF_LM           (ecx, "LAHF/SAHF in Long Mode", CPUIDRequest::ExtendedFeatures4) = 1 << 0,
         CmpLegacy         (ecx, "Hyperthreading is not valid", CPUIDRequest::ExtendedFeatures4) = 1 << 1,
-        SecureVM          (ecx, "Secure Virtual Machin", CPUIDRequest::ExtendedFeatures4) = 1 << 2,
+        SecureVM          (ecx, "Secure Virtual Machine", CPUIDRequest::ExtendedFeatures4) = 1 << 2,
         ExtendedAPIC      (ecx, "Extended APIC Space", CPUIDRequest::ExtendedFeatures4) = 1 << 3,
         CR8Legacy         (ecx, "CR8 in 32-bit mode", CPUIDRequest::ExtendedFeatures4) = 1 << 4,
         ABM               (ecx, "Advanced Bit Manipulation", CPUIDRequest::ExtendedFeatures4) = 1 << 5,
