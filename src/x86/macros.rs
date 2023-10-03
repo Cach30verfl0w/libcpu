@@ -1,31 +1,18 @@
 #[macro_export]
 macro_rules! cpu_register {
-    ($name: ident, $register: literal $(, $flags_struct: ident)?) => {
-        pub struct $name;
-
-        impl $name {
-
-            $(
-            pub fn set_flags(value: $flags_struct) {
-                Self::set(Self::get() | value.bits());
-            }
-
-            pub fn get_flags() -> $flags_struct {
-                $flags_struct::from_bits_truncate(Self::get())
-            }
-            )?
-
-            pub fn set(value: crate::Register) {
+    ($name: ident, $register: literal, $flags_struct: ident) => {
+        paste::paste! {
+            pub fn [<set_ $name>](value: $flags_struct) {
                 unsafe {
                     core::arch::asm!(
                         concat!("mov ", $register, ", {}"),
-                        in(reg) value,
+                        in(reg) (value | [<get_ $name>]()).bits(),
                         options(nomem, nostack, preserves_flags)
                     );
                 }
             }
 
-            pub fn get() -> crate::Register {
+            pub fn [<get_ $name>]() -> $flags_struct {
                 let mut value = 0;
                 unsafe {
                     core::arch::asm!(
@@ -34,9 +21,31 @@ macro_rules! cpu_register {
                         options(nomem, nostack, preserves_flags)
                     );
                 }
-                value
+                $flags_struct::from_bits_truncate(value)
             }
+        }
+    };
+    ($name: ident, $register: literal) => {
+        pub fn set_$name(value: crate::Register) {
+            unsafe {
+                core::arch::asm!(
+                    concat!("mov ", $register, ", {}"),
+                    in(reg) value,
+                    options(nomem, nostack, preserves_flags)
+                );
+            }
+        }
 
+        pub fn get_$name() -> crate::Register {
+            let mut value = 0;
+            unsafe {
+                core::arch::asm!(
+                    concat!("mov {}, ", $register),
+                    out(reg) value,
+                    options(nomem, nostack, preserves_flags)
+                );
+            }
+            value
         }
     }
 }
@@ -73,6 +82,7 @@ macro_rules! cpu_features {
                 Self::enabled_features_by(CPUIDRequest::ExtendedFeatures1, &mut enabled_features);
                 Self::enabled_features_by(CPUIDRequest::ExtendedFeatures2, &mut enabled_features);
                 Self::enabled_features_by(CPUIDRequest::ExtendedFeatures3, &mut enabled_features);
+                Self::enabled_features_by(CPUIDRequest::ExtendedFeatures4, &mut enabled_features);
                 enabled_features
             }
 

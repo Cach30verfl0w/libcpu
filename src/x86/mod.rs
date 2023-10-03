@@ -23,7 +23,7 @@ bitflags! {
     }
 }
 
-cpu_register!(CR0, "cr0", CR0Flags);
+cpu_register!(cr0, "cr0", CR0Flags);
 
 bitflags! {
     #[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
@@ -33,7 +33,7 @@ bitflags! {
     }
 }
 
-cpu_register!(CR3, "cr3", CR3Flags);
+cpu_register!(cr3, "cr3", CR3Flags);
 
 bitflags! {
     #[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
@@ -63,7 +63,7 @@ bitflags! {
     }
 }
 
-cpu_register!(CR4, "cr4", CR4Flags);
+cpu_register!(cr4, "cr4", CR4Flags);
 
 cpu_features! {
     #[allow(non_camel_case_types)]
