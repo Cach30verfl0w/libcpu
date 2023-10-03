@@ -4,7 +4,7 @@
 ![GitHub](https://img.shields.io/github/license/Cach30verfl0w/libcpu) ![GitHub issues](https://img.shields.io/github/issues/Cach30verfl0w/libcpu) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Cach30verfl0w/libcpu) ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/y/Cach30verfl0w/libcpu) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Cach30verfl0w/libcpu/main)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/Cach30verfl0w/libcpu)
 
-LibCPU is a library to interact with platform-independent and platform-depend features of the CPU. Subproject of [`OverflowOS`](https://github.com/Cach30verfl0w/OverflowOS)
+LibCPU is a library to interact with platform-independent and platform-dependant features of the CPU. Subproject of [`OverflowOS`](https://github.com/Cach30verfl0w/OverflowOS)
 
 </div>
 
