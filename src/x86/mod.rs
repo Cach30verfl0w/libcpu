@@ -175,7 +175,7 @@ cpu_features! {
         PREFETCHI         (edx, "Instruction-Cache prefetch Instructions", CPUIDRequest::ExtendedFeatures2) = 1 << 14,
         UserMSR           (edx, "User-Mode MSR Access Instructions", CPUIDRequest::ExtendedFeatures2) = 1 << 15,
         UIRetUIFFromRFlags(edx, "UIRET Instruction set User Interrupt Flags to 1", CPUIDRequest::ExtendedFeatures2) = 1 << 17,
-        CET_SSS           (edx, "Control-Flow Enforcement Supervisor Shadow Stack can#t be prematurely busy", CPUIDRequest::ExtendedFeatures2) = 1 << 18,
+        CET_SSS           (edx, "Control-Flow Enforcement Supervisor Shadow Stack can't be prematurely busy", CPUIDRequest::ExtendedFeatures2) = 1 << 18,
         AVX10             (edx, "AVX10 Converged Vector ISA", CPUIDRequest::ExtendedFeatures2) = 1 << 19,
         APX_F             (edx, "Advanced Performance Extensions Foundation", CPUIDRequest::ExtendedFeatures2) = 1 << 21,
         PFSD              (edx, "Fast Store Forwarding Predictor Disable supported", CPUIDRequest::ExtendedFeatures3) = 1 << 0,
