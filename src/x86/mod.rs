@@ -9,6 +9,7 @@ use crate::Register;
 mod macros;
 mod cpuid;
 pub mod gdt;
+pub mod idt;
 
 /// This structure represents the privilege level for the descriptor. x86 and x86_64 CPUs are
 /// providing a few rings, but only 2 are used in Production-ready operating systems.

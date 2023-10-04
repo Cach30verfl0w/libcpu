@@ -1,3 +1,4 @@
+#![feature(abi_x86_interrupt)]
 #![no_std]
 
 extern crate alloc;
@@ -29,7 +30,7 @@ mod arm;
 #[cfg(any(target_arch = "arm", target_arch = "aarch64"))]
 pub use arm::*;
 
-pub fn halt_cpu() {
+pub fn halt_cpu() -> ! {
     loop {
         wait_for_interrupts();
     }
