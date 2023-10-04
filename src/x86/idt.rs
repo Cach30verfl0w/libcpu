@@ -204,8 +204,8 @@ impl InterruptStackFrame {
 /// is only available on Intel CPUs with Intel VT-x)
 ///
 /// - [Exception::ControlProtection] (Fault) - This exception occurs when a control flow transfer
-/// that violates the Intel CET (Control Flow Enforcement Technology) was indicated. (This fault is
-/// only available on Intel CPUs with Intel CET)
+/// that violates the Intel CET (Control Flow Enforcement Technology) or other Shadow Stack
+/// implementations was indicated.
 ///
 /// - [Exception::HypervisorInjection] (Fault) - This exception occurs when the hypervisor into a
 /// secure guest VM to notify the VM of pending events (This fault is only available on AMD CPUs
