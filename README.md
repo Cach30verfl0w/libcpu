@@ -19,7 +19,7 @@ Currently, I try to support the architectures listed below. Currently, I'm only 
 
 ## Credits
 I have to give some credits for a few assembly instructions or information about architectures and code design ideas. Here is a list.
-- [set_cs](https://github.com/rust-osdev/x86_64/blob/master/src/instructions/segmentation.rs#L74) function from [x86_64](https://github.com/rust-osdev/x86_64)
+- [set_cs](https://github.com/rust-osdev/x86_64/blob/master/src/instructions/segmentation.rs#L74) ([Source in LibCPU](https://github.com/Cach30verfl0w/libcpu/blob/main/src/x86/mod.rs#L290)) function from [x86_64](https://github.com/rust-osdev/x86_64)
 
 ## Related projects
 I found some projects that are related to this. A few of them are written in a different language, but you can check out them too. Here is a list with them.
