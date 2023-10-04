@@ -12,6 +12,7 @@ macro_rules! cpu_register {
                 }
             }
 
+            #[allow(unused_assignments)]
             pub fn [<get_ $name>]() -> $flags_struct {
                 let mut value = 0;
                 unsafe {
@@ -26,26 +27,29 @@ macro_rules! cpu_register {
         }
     };
     ($name: ident, $register: literal) => {
-        pub fn set_$name(value: crate::Register) {
-            unsafe {
-                core::arch::asm!(
-                    concat!("mov ", $register, ", {}"),
-                    in(reg) value,
-                    options(nomem, nostack, preserves_flags)
-                );
+        paste::paste! {
+            pub fn [<set_ $name>](value: crate::Register) {
+                unsafe {
+                    core::arch::asm!(
+                        concat!("mov ", $register, ", {}"),
+                        in(reg) value,
+                        options(nomem, nostack, preserves_flags)
+                    );
+                }
             }
-        }
 
-        pub fn get_$name() -> crate::Register {
-            let mut value = 0;
-            unsafe {
-                core::arch::asm!(
-                    concat!("mov {}, ", $register),
-                    out(reg) value,
-                    options(nomem, nostack, preserves_flags)
-                );
+            #[allow(unused_assignments)]
+            pub fn [<get_ $name>]() -> crate::Register {
+                let mut value = 0;
+                unsafe {
+                    core::arch::asm!(
+                        concat!("mov {}, ", $register),
+                        out(reg) value,
+                        options(nomem, nostack, preserves_flags)
+                    );
+                }
+                value
             }
-            value
         }
     }
 }
