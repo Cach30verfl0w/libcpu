@@ -1,15 +1,24 @@
-use core::arch::asm;
-use core::fmt::{Display, Formatter};
+use crate::{
+    cpu_features,
+    cpu_register,
+    x86::cpuid::CPUIDRequest,
+    MemoryAddress,
+    Register,
+};
 use bit_field::BitField;
 use bitflags::bitflags;
-use crate::{cpu_register, cpu_features, MemoryAddress};
-use crate::x86::cpuid::CPUIDRequest;
-use crate::Register;
+use core::{
+    arch::asm,
+    fmt::{
+        Display,
+        Formatter,
+    },
+};
 
-mod macros;
 mod cpuid;
 pub mod gdt;
 pub mod idt;
+mod macros;
 
 /// This structure represents the privilege level for the descriptor. x86 and x86_64 CPUs are
 /// providing a few rings, but only 2 are used in Production-ready operating systems.
@@ -302,7 +311,6 @@ pub fn set_cs(selector: SegmentSelector) {
         );
     }
 }
-
 
 pub fn get_cs() -> SegmentSelector {
     let mut value = 0;

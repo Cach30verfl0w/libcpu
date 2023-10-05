@@ -58,7 +58,13 @@
 //! - [Global Descriptor Table](https://wiki.osdev.org/Global_Descriptor_Table)
 //! by [OSDev.org](https://wiki.osdev.org)
 
-use crate::{x86::DescriptorTablePointer, MemoryAddress, PrivilegeLevel, SegmentSelector, DescriptorTable};
+use crate::{
+    x86::DescriptorTablePointer,
+    DescriptorTable,
+    MemoryAddress,
+    PrivilegeLevel,
+    SegmentSelector,
+};
 use bit_field::BitField;
 use bitflags::bitflags;
 use core::{
@@ -196,11 +202,12 @@ pub struct GDTDescriptor {
 
     /// These bytes are storing the higher middle 16 bits of the base address of the section.
     /// (32bit only)
-    higher_base_address: u8
+    higher_base_address: u8,
 }
 
 impl GDTDescriptor {
-    pub const NULL: GDTDescriptor = GDTDescriptor::new(PrivilegeLevel::KernelSpace, Access::empty(), Flags::empty());
+    pub const NULL: GDTDescriptor =
+        GDTDescriptor::new(PrivilegeLevel::KernelSpace, Access::empty(), Flags::empty());
 
     /// This function creates a new GDT descriptor with the specified values. The function parameters
     /// `privilege`, `kind` and `access` are merged to the access byte for the descriptor.
@@ -223,7 +230,7 @@ impl GDTDescriptor {
             middle_base_address: 0,
             access: 0,
             flags: 0,
-            higher_base_address: 0
+            higher_base_address: 0,
         };
 
         descriptor.access = access.bits() | (privilege as u8);
@@ -242,7 +249,11 @@ impl GDTDescriptor {
     pub fn code_segment(level: PrivilegeLevel) -> Self {
         Self::new(
             level,
-            Access::PRESENT | Access::ACCESSED | Access::USER_SEGMENT | Access::READABLE | Access::EXECUTABLE,
+            Access::PRESENT
+                | Access::ACCESSED
+                | Access::USER_SEGMENT
+                | Access::READABLE
+                | Access::EXECUTABLE,
             Flags::GRANULARITY | Flags::LONG_MODE,
         )
     }
@@ -258,7 +269,7 @@ impl GDTDescriptor {
         Self::new(
             level,
             Access::PRESENT | Access::ACCESSED | Access::USER_SEGMENT | Access::WRITABLE,
-            Flags::GRANULARITY | Flags::LONG_MODE
+            Flags::GRANULARITY | Flags::LONG_MODE,
         )
     }
 
@@ -354,7 +365,11 @@ impl GlobalDescriptorTable {
 
         self.descriptors[self.count] = descriptor;
         self.count += 1;
-        Some(SegmentSelector::new((self.count - 1) as u16, DescriptorTable::GDT, descriptor.privilege_level()))
+        Some(SegmentSelector::new(
+            (self.count - 1) as u16,
+            DescriptorTable::GDT,
+            descriptor.privilege_level(),
+        ))
     }
 
     /// This function generates a pointer to the Global Descriptor Table (GDT) with the base address

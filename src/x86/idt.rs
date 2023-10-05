@@ -57,7 +57,15 @@
 //! - [x86 Handling Exceptions](https://hackernoon.com/x86-handling-exceptions-lds3uxc) by
 //! [HackerNoon.com](https://hackernoon.com/)
 
-use crate::{halt_cpu, DescriptorTable, DescriptorTablePointer, MemoryAddress, PrivilegeLevel, SegmentSelector, get_cs};
+use crate::{
+    get_cs,
+    halt_cpu,
+    DescriptorTable,
+    DescriptorTablePointer,
+    MemoryAddress,
+    PrivilegeLevel,
+    SegmentSelector,
+};
 use core::{
     arch::asm,
     mem::size_of,

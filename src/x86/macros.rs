@@ -51,7 +51,7 @@ macro_rules! cpu_register {
                 value
             }
         }
-    }
+    };
 }
 
 #[macro_export]
