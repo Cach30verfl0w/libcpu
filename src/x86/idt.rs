@@ -57,20 +57,13 @@
 //! - [x86 Handling Exceptions](https://hackernoon.com/x86-handling-exceptions-lds3uxc) by
 //! [HackerNoon.com](https://hackernoon.com/)
 
-use crate::{
-    halt_cpu,
-    DescriptorTable,
-    DescriptorTablePointer,
-    MemoryAddress,
-    PrivilegeLevel,
-    SegmentSelector,
-};
+use crate::{halt_cpu, DescriptorTable, DescriptorTablePointer, MemoryAddress, PrivilegeLevel, SegmentSelector, get_cs};
 use core::{
     arch::asm,
     mem::size_of,
 };
 
-extern "x86-interrupt" fn default_interrupt_handler(stack_frame: &mut InterruptStackFrame) {
+pub extern "x86-interrupt" fn default_interrupt_handler(stack_frame: InterruptStackFrame) {
     unsafe {
         stack_frame.ret();
     }
@@ -532,6 +525,13 @@ pub enum Exception {
     Security = 0x30,
 }
 
+impl From<Exception> for usize {
+    #[inline]
+    fn from(value: Exception) -> Self {
+        value as usize
+    }
+}
+
 /// This structure implements a single descriptor in the IDT (Interrupt Descriptor Table). This
 /// structure is compatible with the raw memory representation of a descriptor. The implementation
 /// of the IDT is only needed for IA-32 and x86_64 architectures.
@@ -554,7 +554,7 @@ pub enum Exception {
 #[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
 pub struct IDTDescriptor {
     lower_isr_address: u16,
-    segment_selector: u16,
+    segment_selector: SegmentSelector,
     always0: u8,
     flags: u8,
     middle_isr_address: u16,
@@ -565,20 +565,18 @@ pub struct IDTDescriptor {
 impl IDTDescriptor {
     pub fn default() -> Self {
         IDTDescriptor::new(
-            (default_interrupt_handler as *const ()) as u64,
-            SegmentSelector::new(1, DescriptorTable::GDT, PrivilegeLevel::KernelSpace),
+            default_interrupt_handler as u64,
             GateType::Trap,
             PrivilegeLevel::KernelSpace,
         )
     }
 
     pub fn new(
-        handler_address: MemoryAddress, selector: SegmentSelector, gate_type: GateType,
-        privilege_level: PrivilegeLevel,
+        handler_address: MemoryAddress, gate_type: GateType, privilege_level: PrivilegeLevel,
     ) -> Self {
         Self {
             lower_isr_address: handler_address as u16,
-            segment_selector: selector.0,
+            segment_selector: get_cs(),
             always0: 0,
             flags: 0b1000_0000 | (privilege_level as u8) | (gate_type as u8),
             middle_isr_address: (handler_address >> 16) as u16,
@@ -629,8 +627,8 @@ impl InterruptDescriptorTable {
     }
 
     /// This function inserts a [IDTDescriptor] at the specified index in the IDT.
-    pub fn insert(&mut self, index: usize, descriptor: IDTDescriptor) {
-        self.descriptors[index] = descriptor;
+    pub fn insert<T: Into<usize>>(&mut self, index: T, descriptor: IDTDescriptor) {
+        self.descriptors[index.into()] = descriptor;
     }
 
     /// This function generates a pointer to the Interrupt Descriptor Table (IDT) with the base

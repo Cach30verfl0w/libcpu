@@ -303,6 +303,19 @@ pub fn set_cs(selector: SegmentSelector) {
     }
 }
 
+
+pub fn get_cs() -> SegmentSelector {
+    let mut value = 0;
+    unsafe {
+        asm!(
+            concat!("mov {}, cs"),
+            out(reg) value,
+            options(nomem, nostack, preserves_flags)
+        );
+    }
+    SegmentSelector(value)
+}
+
 cpu_register!(ds, "ds");
 cpu_register!(es, "es");
 cpu_register!(ss, "ss");
