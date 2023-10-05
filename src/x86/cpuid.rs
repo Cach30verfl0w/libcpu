@@ -6,6 +6,7 @@ use core::arch::x86_64::{
 
 #[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
 pub enum CPUIDRequest {
+    Vendor,
     Features,
     ExtendedFeatures1,
     ExtendedFeatures2,
@@ -26,6 +27,7 @@ impl CPUIDRequest {
 
     fn leaf(&self) -> u32 {
         match self {
+            CPUIDRequest::Vendor => 0,
             CPUIDRequest::Features => 1,
             CPUIDRequest::ExtendedFeatures1 => 7,
             CPUIDRequest::ExtendedFeatures2 => 7,

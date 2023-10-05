@@ -1,4 +1,49 @@
 #[macro_export]
+macro_rules! cpu_vendor {
+    ($(#[$attr:meta])* $vis: vis enum $name: ident {
+        $($(#[$vendor_attr:meta])* $vendor_enum: ident ($vendor_string_start: literal $(, $vendor_string: literal)?) = $literal: literal),*
+    }) => {
+        $(#[$attr])*
+        $vis enum $name {
+            $(
+            $(#[$vendor_attr])*
+            $vendor_enum,
+            )*
+            Unknown(alloc::string::String)
+        }
+
+        impl alloc::fmt::Display for $name {
+            fn fmt(&self, formatter: &mut alloc::fmt::Formatter<'_>) -> alloc::fmt::Result {
+                write!(formatter, "{}", match self {
+                    $(
+                    Self::$vendor_enum => $literal,
+                    )*
+                    Self::Unknown(string) => string
+                })
+            }
+        }
+
+        impl $name {
+
+            pub fn get_vendor() -> Self {
+                use alloc::string::{ToString, String};
+                let result = crate::x86::cpuid::CPUIDRequest::Vendor.cpuid();
+                match String::from_utf8_lossy(&[
+                    result.ebx.to_ne_bytes(),
+                    result.edx.to_ne_bytes(),
+                    result.ecx.to_ne_bytes()
+                ].concat()).trim() {
+                    $(
+                    $vendor_string_start $(| $vendor_string)? => Self::$vendor_enum,
+                    )*
+                    vendor => Self::Unknown(vendor.to_string())
+                }
+            }
+        }
+    }
+}
+
+#[macro_export]
 macro_rules! cpu_register {
     ($name: ident, $register: literal, $flags_struct: ident) => {
         paste::paste! {

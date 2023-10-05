@@ -206,9 +206,6 @@ pub struct GDTDescriptor {
 }
 
 impl GDTDescriptor {
-    pub const NULL: GDTDescriptor =
-        GDTDescriptor::new(0, 0, PrivilegeLevel::KernelSpace, Access::empty(), Flags::empty());
-
     /// This function creates a new GDT descriptor with the specified values. The function parameters
     /// `privilege`, `kind` and `access` are merged to the access byte for the descriptor.
     ///
@@ -223,19 +220,27 @@ impl GDTDescriptor {
     /// - [GDT Tutorial](https://wiki.osdev.org/GDT_Tutorial#What_to_Put_In_a_GDT)
     /// by [OSDev.org](https://wiki.osdev.org)
     #[must_use]
-    pub const fn new(base_address: u32, limit_address: u32, privilege: PrivilegeLevel, access: Access, flags: Flags) -> Self {
-        let mut descriptor = GDTDescriptor {
+    pub fn new(base_address: u32, limit_address: u32, privilege: PrivilegeLevel, access: Access, flags: Flags) -> Self {
+        GDTDescriptor {
             lower_limit_address: limit_address as u16,
             lower_base_address: base_address as u16,
-            middle_base_address: (limit_address >> 16) as u8,
-            access: ((limit_address >> 24).get_bits(0..3)) as u8,
-            flags: 0,
+            middle_base_address: (base_address >> 16) as u8,
+            access: (limit_address.get_bits(0..3) as u8) | access.bits() | (privilege as u8),
+            flags: flags.bits(),
             higher_base_address: (base_address >> 16) as u8,
-        };
+        }
+    }
 
-        descriptor.access |= access.bits() | (privilege as u8);
-        descriptor.flags = flags.bits();
-        descriptor
+    #[inline]
+    fn null() -> Self {
+        Self {
+            lower_limit_address: 0,
+            lower_base_address: 0,
+            middle_base_address: 0,
+            access: 0,
+            flags: 0,
+            higher_base_address: 0,
+        }
     }
 
     /// This function creates a new GDT descriptor with the default settings for a executable Code
@@ -341,9 +346,9 @@ pub struct GlobalDescriptorTable {
 
 impl GlobalDescriptorTable {
     #[must_use]
-    pub const fn new() -> Self {
+    pub fn new() -> Self {
         Self {
-            descriptors: [GDTDescriptor::NULL; 8192],
+            descriptors: [GDTDescriptor::null(); 8192],
             count: 1,
         }
     }

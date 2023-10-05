@@ -18,7 +18,7 @@ pub type MemoryAddress = u64;
 
 // x86 and x86_64 API
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-mod x86;
+pub(crate) mod x86;
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub use x86::*;

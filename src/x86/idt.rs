@@ -59,8 +59,6 @@
 
 use crate::{
     get_cs,
-    halt_cpu,
-    DescriptorTable,
     DescriptorTablePointer,
     MemoryAddress,
     PrivilegeLevel,
@@ -70,6 +68,8 @@ use core::{
     arch::asm,
     mem::size_of,
 };
+
+pub type HandlerFunction = extern "x86-interrupt" fn(InterruptStackFrame);
 
 pub extern "x86-interrupt" fn default_interrupt_handler(stack_frame: InterruptStackFrame) {
     unsafe {
@@ -573,22 +573,22 @@ pub struct IDTDescriptor {
 impl IDTDescriptor {
     pub fn default() -> Self {
         IDTDescriptor::new(
-            default_interrupt_handler as u64,
+            default_interrupt_handler,
             GateType::Trap,
             PrivilegeLevel::KernelSpace,
         )
     }
 
     pub fn new(
-        handler_address: MemoryAddress, gate_type: GateType, privilege_level: PrivilegeLevel,
+        handler_address: HandlerFunction, gate_type: GateType, privilege_level: PrivilegeLevel
     ) -> Self {
         Self {
             lower_isr_address: handler_address as u16,
             segment_selector: get_cs(),
             always0: 0,
             flags: 0b1000_0000 | (privilege_level as u8) | (gate_type as u8),
-            middle_isr_address: (handler_address >> 16) as u16,
-            higher_isr_address: (handler_address >> 32) as u32,
+            middle_isr_address: (handler_address as u64 >> 16) as u16,
+            higher_isr_address: (handler_address as u64 >> 32) as u32,
             reserved: 0,
         }
     }
