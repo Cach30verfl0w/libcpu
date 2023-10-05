@@ -1,3 +1,8 @@
+use crate::{CPUFeature, CPUVendor};
+
+pub(crate) static mut VENDOR_CACHE: Option<CPUVendor>                   = None;
+pub(crate) static mut FEATURES_CACHE: Option<alloc::vec::Vec<CPUFeature>> = None;
+
 #[macro_export]
 macro_rules! cpu_vendor {
     ($(#[$attr:meta])* $vis: vis enum $name: ident {
@@ -9,7 +14,7 @@ macro_rules! cpu_vendor {
             $(#[$vendor_attr])*
             $vendor_enum,
             )*
-            Unknown(alloc::string::String)
+            Unknown
         }
 
         impl alloc::fmt::Display for $name {
@@ -18,7 +23,7 @@ macro_rules! cpu_vendor {
                     $(
                     Self::$vendor_enum => $literal,
                     )*
-                    Self::Unknown(string) => string
+                    Self::Unknown => "Unknown Vendor"
                 })
             }
         }
@@ -26,9 +31,13 @@ macro_rules! cpu_vendor {
         impl $name {
 
             pub fn get_vendor() -> Self {
+                if let Some(vendor) = unsafe { crate::macros::VENDOR_CACHE } {
+                    return vendor;
+                }
+
                 use alloc::string::{ToString, String};
                 let result = crate::x86::cpuid::CPUIDRequest::Vendor.cpuid();
-                match String::from_utf8_lossy(&[
+                let vendor = match String::from_utf8_lossy(&[
                     result.ebx.to_ne_bytes(),
                     result.edx.to_ne_bytes(),
                     result.ecx.to_ne_bytes()
@@ -36,8 +45,12 @@ macro_rules! cpu_vendor {
                     $(
                     $vendor_string_start $(| $vendor_string)? => Self::$vendor_enum,
                     )*
-                    vendor => Self::Unknown(vendor.to_string())
+                    _ => Self::Unknown
+                };
+                unsafe {
+                    crate::macros::VENDOR_CACHE = Some(vendor);
                 }
+                vendor
             }
         }
     }
@@ -125,14 +138,19 @@ macro_rules! cpu_features {
         impl $name {
 
             #[inline]
-            pub fn enabled_features() -> alloc::vec::Vec<Self> {
+            pub fn enabled_features<'a>() -> &'a alloc::vec::Vec<Self> where 'a: 'static {
+                if let Some(features) = unsafe { crate::macros::FEATURES_CACHE.as_ref() } {
+                    return features;
+                }
+
                 let mut enabled_features = alloc::vec::Vec::new();
                 Self::enabled_features_by(CPUIDRequest::Features, &mut enabled_features);
                 Self::enabled_features_by(CPUIDRequest::ExtendedFeatures1, &mut enabled_features);
                 Self::enabled_features_by(CPUIDRequest::ExtendedFeatures2, &mut enabled_features);
                 Self::enabled_features_by(CPUIDRequest::ExtendedFeatures3, &mut enabled_features);
                 Self::enabled_features_by(CPUIDRequest::ExtendedFeatures4, &mut enabled_features);
-                enabled_features
+                unsafe { crate::macros::FEATURES_CACHE = Some(enabled_features) };
+                Self::enabled_features()
             }
 
             #[inline]

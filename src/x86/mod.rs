@@ -12,7 +12,7 @@ use core::{
 pub(crate) mod cpuid;
 pub mod gdt;
 pub mod idt;
-mod macros;
+pub(crate) mod macros;
 
 /// This structure represents the privilege level for the descriptor. x86 and x86_64 CPUs are
 /// providing a few rings, but only 2 are used in Production-ready operating systems.
@@ -412,7 +412,7 @@ cpu_vendor! {
     /// - [CPUVendor::Parallels] (Hypervisor) - Parallels
     /// - [CPUVendor::BHYVE] (Hypervisor) - Bhyve
     /// - [CPUVendor::QNX] (Hypervisor) - QNX
-    #[derive(Clone, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
+    #[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
     pub enum CPUVendor {
         /// This variant indicates the American semiconductor company
         /// [Advanced Micro Devices, Inc. (AMD)](https://en.wikipedia.org/wiki/AMD) as the CPU

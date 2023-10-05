@@ -8,6 +8,10 @@ license-file = "LICENSE"
 version = "1.0.0"
 edition = "2021"
 
+[features]
+default = ["cpuid_cache"]
+cpuid_cache = []
+
 [dependencies]
 bitflags = "2.4.0"
 paste = "1.0.14"
