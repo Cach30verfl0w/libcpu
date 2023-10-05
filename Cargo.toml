@@ -1,6 +1,11 @@
 [package]
 name = "libcpu"
-version = "0.1.0"
+description = "LibCPU is a library to interact with platform-independent and platform-dependant features of the CPU Resources"
+categories = ["no-std", "embedded", "hardware-support"]
+keywords = ["cpu", "libcpu", "platforms", "features"]
+authors = ["Cedric Hammes <cach30verfl0w@gmail.com>"]
+license-file = "LICENSE"
+version = "1.0.0"
 edition = "2021"
 
 [dependencies]
