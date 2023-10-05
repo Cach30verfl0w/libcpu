@@ -99,8 +99,6 @@ pub enum GateType {
     Trap = 0xF,
 }
 
-// TODO: Add more documentation and references to InterruptStackFrame
-
 /// This structure represents the interrupt stack frame that the CPU pushed on interrupt or
 /// exception. We can use that for state recovery.
 #[repr(C)]

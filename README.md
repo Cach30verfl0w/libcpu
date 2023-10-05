@@ -12,7 +12,7 @@ LibCPU is a library to interact with platform-independent and platform-dependant
 Currently, I try to support the architectures listed below. Currently, I'm only working on the x86_64 Support, but x86, ARM and AArch64 are following. In the following table you can see the status of every supported architecture
 | Architecture  | Status | CPUID | Control Registers | GDT | IDT            |
 |---------------|----------------|----------------|------------------|----------------|----------------------------|
-| x86_64        | 🚧 In progress | ✅ Finished     | ✅ Finished      | ✅ Finished     | 🚧 In progress             |
+| x86_64        | 🚧 In progress | ✅ Finished     | ✅ Finished      | ✅ Finished     | ✅ Finished              |
 | x86           | 📌 Planned     | Planned        | Planned           | Planned      | Planned      |
 | ARM           | 📌 Planned     | Planned        | Planned           | Not available | Not available |
 | ARM64/AArch64 | 📌 Planned     | Planned        | Planned           | Not available | Not available |
