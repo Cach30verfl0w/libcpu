@@ -1,6 +1,8 @@
 use crate::{CPUFeature, CPUVendor};
 
-pub(crate) static mut VENDOR_CACHE: Option<CPUVendor>                   = None;
+#[cfg(feature = "cpuid_cache")]
+pub(crate) static mut VENDOR_CACHE: Option<CPUVendor>                     = None;
+#[cfg(feature = "cpuid_cache")]
 pub(crate) static mut FEATURES_CACHE: Option<alloc::vec::Vec<CPUFeature>> = None;
 
 #[macro_export]
@@ -31,11 +33,12 @@ macro_rules! cpu_vendor {
         impl $name {
 
             pub fn get_vendor() -> Self {
+                #[cfg(target = "cpuid_cache")]
                 if let Some(vendor) = unsafe { crate::macros::VENDOR_CACHE } {
                     return vendor;
                 }
 
-                use alloc::string::{ToString, String};
+                use alloc::string::String;
                 let result = crate::x86::cpuid::CPUIDRequest::Vendor.cpuid();
                 let vendor = match String::from_utf8_lossy(&[
                     result.ebx.to_ne_bytes(),
@@ -47,9 +50,8 @@ macro_rules! cpu_vendor {
                     )*
                     _ => Self::Unknown
                 };
-                unsafe {
-                    crate::macros::VENDOR_CACHE = Some(vendor);
-                }
+                #[cfg(target = "cpuid_cache")]
+                unsafe {crate::macros::VENDOR_CACHE = Some(vendor) };
                 vendor
             }
         }
@@ -138,8 +140,9 @@ macro_rules! cpu_features {
         impl $name {
 
             #[inline]
-            pub fn enabled_features<'a>() -> &'a alloc::vec::Vec<Self> where 'a: 'static {
-                if let Some(features) = unsafe { crate::macros::FEATURES_CACHE.as_ref() } {
+            pub fn enabled_features() -> alloc::vec::Vec<Self> {
+                #[cfg(feature = "cpuid_cache")]
+                if let Some(features) = unsafe { crate::macros::FEATURES_CACHE.clone() } {
                     return features;
                 }
 
@@ -149,8 +152,10 @@ macro_rules! cpu_features {
                 Self::enabled_features_by(CPUIDRequest::ExtendedFeatures2, &mut enabled_features);
                 Self::enabled_features_by(CPUIDRequest::ExtendedFeatures3, &mut enabled_features);
                 Self::enabled_features_by(CPUIDRequest::ExtendedFeatures4, &mut enabled_features);
-                unsafe { crate::macros::FEATURES_CACHE = Some(enabled_features) };
-                Self::enabled_features()
+
+                #[cfg(feature = "cpuid_cache")]
+                unsafe { crate::macros::FEATURES_CACHE = Some(enabled_features.clone()) };
+                enabled_features
             }
 
             #[inline]
