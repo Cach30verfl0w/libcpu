@@ -6,32 +6,14 @@
 //! and the flags for the segment.
 //!
 //! The following structure shows how a single descriptor is represented in the memory on x86
-//! systems (ML = Middle Limit, DF = Descriptor Flags):
+//! systems (MLI = Middle Limit, DFL = Descriptor Flags):
 //! ```text
 //! 0                   1                   2                   3                   4
 //! 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 //! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |              Lower Limit              |          Segment Base Address         |
+//! |          Lower Base Address           |              Lower Limit              |
 //! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |    Middle Base    |   Access Flags    | ML  | DF  |  Higher Base  |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! ```
-//! The limit values and base address values are only for 32-bit systems. As said before, these
-//! values are ignored in the 64-bit mode. Each selector covers the entire linear address space.
-//!
-//! The following structure shows how a single descriptor is represented in the memory on x86_64
-//! systems (ML = Middle Limit, DF = Descriptor Flags):
-//! ```text
-//! 0                   1                   2                   3                   4
-//! 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |              Lower Limit              |          Segment Base Address         |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |    Middle Base    |   Access Flags    | ML  | DF  |  Higher Base  |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |                        "Highest" Segment Base Address                         |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |                                    Reserved                                   |
+//! |       Base        |    Access Bits    |   MLI   |   DFL   |    Higher Base    |
 //! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //! ```
 //! The limit values and base address values are only for 32-bit systems. As said before, these

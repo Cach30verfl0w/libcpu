@@ -11,7 +11,7 @@ use core::{
 
 pub(crate) mod cpuid;
 pub mod gdt;
-pub mod idt;
+pub mod interrupts;
 pub(crate) mod macros;
 
 /// This structure represents the privilege level for the descriptor. x86 and x86_64 CPUs are

@@ -15,7 +15,7 @@ Currently, I try to support the architectures listed below. Currently, I'm only 
 | x86_64        | 🚧 In progress | ✅ Finished     | ✅ Finished      | ✅ Finished     | ✅ Finished              |
 | x86           | 🚧 In progress | ✅ Finished     | ✅ Finished      | ✅ Untested     | Planned       |
 | ARM           | 📌 Planned     | Planned        | Planned          | Not available  | Not available |
-| ARM64/AArch64 | 📌 Planned     | Planned        | Planned          | Not available  | Not available |
+| ARM64/AArch64 | 🚧 In progress | Planned        | Planned          | Not available  | Not available |
 
 ## Credits
 I have to give some credits for a few assembly instructions or information about architectures and code design ideas. Here is a list.

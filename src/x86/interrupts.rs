@@ -5,37 +5,15 @@
 //! A single IDT descriptor contains address of the handler function, the [SegmentSelector]
 //! and the descriptor's flag.
 //!
-//! The following structure shows how a single descriptor is represented in the memory (x86):
+//! The following structure shows how a single descriptor is represented in the memory
+//! (GTP = Gate Type, CPL = CPU Privilege Level, P = Present Bit):
 //! ```text
 //! 0                   1                   2                   3                   4
 //! 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |     Lower Handler Function Address    |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |            Segment Selector           |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |     Reserved      |       Flags       |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |    Higher Handler Function Address    |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! ```
-//!
-//! The following structure shows how a single descriptor is represented in the memory (x86_64):
-//! ```text
-//! 0                   1                   2                   3                   4
-//! 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |     Lower Handler Function Address    |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |            Segment Selector           |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |     Reserved      |       Flags       |
-//! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |    Middle Handler Function Address    |
 //! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |                         Higher Handler Function Address                       |
+//! |           Segment Selector            |                Offset                 |
 //! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//! |                                Reserved bytes                                 |
+//! |     Reserved      | GTP | 0 | CPL | P |                Offset                 |
 //! +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 //! ```
 //!
