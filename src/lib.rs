@@ -25,7 +25,7 @@ pub use x86::*;
 
 // ARM and ARM64 API
 #[cfg(any(target_arch = "arm", target_arch = "aarch64"))]
-mod arm;
+pub(crate) mod arm;
 
 #[cfg(any(target_arch = "arm", target_arch = "aarch64"))]
 pub use arm::*;

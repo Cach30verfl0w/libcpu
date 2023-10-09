@@ -158,15 +158,6 @@ macro_rules! cpu_features {
                 enabled_features
             }
 
-            #[inline]
-            pub fn all_features() -> alloc::vec::Vec<Self> {
-                alloc::vec![
-                    $(
-                    Self::$feat_ident,
-                    )*
-                ]
-            }
-
             fn enabled_features_by(request: crate::x86::cpuid::CPUIDRequest, vec: &mut alloc::vec::Vec<Self>) {
                 let cpuid = request.cpuid();
                 $(
@@ -174,6 +165,15 @@ macro_rules! cpu_features {
                     vec.push(Self::$feat_ident);
                 }
                 )*
+            }
+
+            #[inline]
+            pub fn all_features() -> alloc::vec::Vec<Self> {
+                alloc::vec![
+                    $(
+                    Self::$feat_ident,
+                    )*
+                ]
             }
 
         }
