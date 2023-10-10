@@ -51,11 +51,41 @@ macro_rules! cpu_vendor {
                     _ => Self::Unknown
                 };
                 #[cfg(target = "cpuid_cache")]
-                unsafe {crate::macros::VENDOR_CACHE = Some(vendor) };
+                unsafe { crate::macros::VENDOR_CACHE = Some(vendor) };
                 vendor
             }
         }
     }
+}
+
+#[macro_export]
+macro_rules! segment_register {
+    ($name: ident, $register: literal) => {
+        paste::paste! {
+            pub fn [<set_ $name>](value: SegmentSelector) {
+                unsafe {
+                    core::arch::asm!(
+                        concat!("mov ", $register, ", {}"),
+                        in(reg) value.0,
+                        options(nomem, nostack, preserves_flags)
+                    );
+                }
+            }
+
+            #[allow(unused_assignments)]
+            pub fn [<get_ $name>]() -> SegmentSelector {
+                let mut value = 0;
+                unsafe {
+                    core::arch::asm!(
+                        concat!("mov {}, ", $register),
+                        out(reg) value,
+                        options(nomem, nostack, preserves_flags)
+                    );
+                }
+                SegmentSelector(value)
+            }
+        }
+    };
 }
 
 #[macro_export]

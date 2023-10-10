@@ -1,4 +1,4 @@
-use crate::{cpu_features, cpu_register, x86::cpuid::CPUIDRequest, MemoryAddress, Register, cpu_vendor};
+use crate::{cpu_features, cpu_register, x86::cpuid::CPUIDRequest, MemoryAddress, Register, cpu_vendor, segment_register};
 use bit_field::BitField;
 use bitflags::bitflags;
 use core::{
@@ -310,7 +310,7 @@ pub fn get_cs() -> SegmentSelector {
     let mut value = 0;
     unsafe {
         asm!(
-            concat!("mov {}, cs"),
+            "mov {}, cs",
             out(reg) value,
             options(nomem, nostack, preserves_flags)
         );
@@ -318,11 +318,11 @@ pub fn get_cs() -> SegmentSelector {
     SegmentSelector(value)
 }
 
-cpu_register!(ds, "ds");
-cpu_register!(es, "es");
-cpu_register!(ss, "ss");
-cpu_register!(fs, "fs");
-cpu_register!(gs, "gs");
+segment_register!(ds, "ds");
+segment_register!(es, "es");
+segment_register!(ss, "ss");
+segment_register!(fs, "fs");
+segment_register!(gs, "gs");
 
 bitflags! {
     #[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug, Hash)]
